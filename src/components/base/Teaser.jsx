@@ -20,24 +20,28 @@ const Teaser = (props) => {
   const imagePath = data?.["fileReference"];
 
   return (
-    <div {...editorProps} data-aue-component="teaser" className={className}>
-      {imagePath && (
-        <img 
-          data-aue-prop="fileReference" 
-          data-aue-type="media" 
-          data-aue-label="Image"
-          src={getImageURL(imagePath)} 
-          alt={data["jcr:title"]} 
-          style={{ maxWidth: '100%', height: 'auto', display: 'block', marginBottom: '1rem' }}
-        />
-      )}
-      <div style={{ padding: '1rem', background: '#f5f5f5' }}>
-        <h2 data-aue-prop="jcr:title" data-aue-type="text" data-aue-label="Title" style={{ margin: '0 0 0.5rem 0' }}>
-          {data["jcr:title"] || "Teaser Title"}
-        </h2>
-        <p data-aue-prop="jcr:description" data-aue-type="text" data-aue-label="Description" style={{ margin: 0 }}>
-          {data["jcr:description"] || "Teaser Description"}
-        </p>
+    <div {...editorProps} data-aue-component="teaser" className={`${className} cmp-teaser`}>
+      <div className="cmp-teaser__content">
+        {imagePath && (
+          <div className="cmp-teaser__image">
+            <img 
+              data-aue-prop="fileReference" 
+              data-aue-type="media" 
+              data-aue-label="Image"
+              src={getImageURL(imagePath)} 
+              alt={data["jcr:title"]} 
+              className="cmp-teaser__image-img"
+            />
+          </div>
+        )}
+        <div className="cmp-teaser__content-details">
+          <h2 data-aue-prop="jcr:title" data-aue-type="text" data-aue-label="Title" className="cmp-teaser__title">
+            {data["jcr:title"] || "Teaser Title"}
+          </h2>
+          <div data-aue-prop="jcr:description" data-aue-type="text" data-aue-label="Description" className="cmp-teaser__description">
+            {data["jcr:description"] || "Teaser Description"}
+          </div>
+        </div>
       </div>
     </div>
   );

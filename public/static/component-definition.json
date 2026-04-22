@@ -71,6 +71,30 @@
               }
             }
           }
+        },
+        {
+          "title": "Image List",
+          "id": "image-list",
+          "model": "image-list",
+          "plugins": {
+            "aem": {
+              "page": {
+                "resourceType": "wknd/components/image-list"
+              }
+            }
+          }
+        },
+        {
+          "title": "Image List Item",
+          "id": "image-list-item",
+          "model": "image-list-item",
+          "plugins": {
+            "aem": {
+              "page": {
+                "resourceType": "wknd/components/page"
+              }
+            }
+          }
         }
       ]
     },

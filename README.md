@@ -9,9 +9,43 @@ To run this application locally and edit it using the Universal Editor, follow t
 ### Prerequisites
 
 1. **AEM Local Instance**: An AEM 6.5 or AEM as a Cloud Service (AEMCS) local SDK instance running locally.
-2. **HTTPS Configuration**: AEM must be configured to run on HTTPS (e.g., `https://localhost:8443`).
+2. **HTTPS Configuration**: AEM must be configured to run on HTTPS (e.g., `https://localhost:8443`). See [Configuring AEM for HTTPS](#configuring-aem-for-https) below for detailed steps.
 3. **Content**: Ensure you have the latest WKND Site or the appropriate headless models/content installed on your local AEM instance.
-4. **Universal Editor CORS Proxy**: You must install the AEM Universal Editor CORS proxy package (bundle/jar) on your local AEM instance. You can download the latest Universal Editor local proxy package from the [Adobe Software Distribution portal](https://experience.adobe.com/#/downloads/content/software-distribution/en/aem.html). This is required to bypass CORS restrictions when the editor runs locally.
+4. **Universal Editor CORS Proxy**: You must install the AEM Universal Editor CORS proxy bundle on your local AEM instance to bypass CORS restrictions when the editor runs locally.
+   - **Installation**: Upload and install the bundle `universal-editor-service-proxy.core-1.0.0.jar` found in the `CORS Proxy` folder via the [AEM System Console (Bundles)](http://localhost:4502/system/console/bundles).
+   - **Configuration**: After installation, go to the [AEM Configuration Manager](http://localhost:4502/system/console/configMgr) and look for "Universal Editor Service Proxy Configuration". Ensure the settings match your local environment (e.g., AEM Host, allowed origins).
+
+### Configuring AEM for HTTPS
+
+To enable HTTPS on your local AEM instance, follow these steps:
+
+1. **Generate SSL Certificates**
+   Run the following commands in your terminal to create the necessary keys and certificates:
+
+   ```bash
+   # Create Private Key
+   openssl genrsa -aes256 -out localhostprivate.key 4096
+
+   # Generate Certificate Signing Request using private key
+   openssl req -sha256 -new -key localhostprivate.key -out localhost.csr -subj "/CN=localhost"
+
+   # Generate the SSL certificate and sign with the private key (valid for 1 year)
+   openssl x509 -req -days 365 -in localhost.csr -signkey localhostprivate.key -out localhost.crt
+
+   # Convert Private Key to DER format (required by AEM SSL wizard)
+   openssl pkcs8 -topk8 -inform PEM -outform DER -in localhostprivate.key -out localhostprivate.der -nocrypt
+   ```
+
+2. **Configure SSL in AEM**
+   - Login to AEM: [http://localhost:4502/aem/start.html](http://localhost:4502/aem/start.html)
+   - Go to **Tools > Security > SSL Configuration**.
+   - Provide passwords for the **Key store** and **Trust store** (e.g., `admin`).
+   - In the **Keys and Certificate** section:
+     - Select the `localhostprivate.der` file for the key.
+     - Select the `localhost.crt` file for the certificate.
+   - In the next section, enter the domain (`localhost`) and leave the port as is (usually `8443`).
+   - Click **Done**. AEM will now be accessible via HTTPS at [https://localhost:8443](https://localhost:8443).
+
 
 ### Environment Configuration
 
@@ -52,7 +86,21 @@ If you are running the Universal Editor service proxy locally, you must create a
    ```bash
    sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain certificate.pem
    ```
-3. **Start the local Universal Editor service:**
+3. **Configure the local Universal Editor service:**
+   Create a `.env` file in the root of the project with the following content:
+
+   ```env
+   UES_PORT=8000
+   UES_PRIVATE_KEY=./key.pem
+   UES_CERT=./certificate.pem
+   UES_TLS_REJECT_UNAUTHORIZED=false
+   UES_CORS_PRIVATE_NETWORK=false
+   UES_DISABLE_IMS_VALIDATION=true
+   UES_LOG_LEVEL=debug
+   NODE_TLS_REJECT_UNAUTHORIZED=0
+   ```
+
+4. **Start the local Universal Editor service:**
    ```bash
    node universal-editor-service.cjs
    ```

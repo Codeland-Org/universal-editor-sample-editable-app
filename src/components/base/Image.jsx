@@ -24,10 +24,12 @@ const Image = (props) => {
     if(!resource || !prop || initialData) return;
     fetchData(resource).then((data) => setData(data));
   }, [resource, prop, initialData]);
-  const path = data?.["fileReference"];
+  const path = data[prop] || data["fileReference"] || data["src"];
+
+  if (!path && !initialData) return null;
 
   return (
-    <img {...editorProps} data-aue-component="image" data-aue-label={"Image"} src={path ? `${getImageURL(path)}` : ""} className={className} alt={data.alt} />
+    <img {...editorProps} data-aue-component="image" data-aue-label={"Image"} src={path ? `${getImageURL(path)}` : null} className={className} alt={data.alt || ""} />
   );
 };
 

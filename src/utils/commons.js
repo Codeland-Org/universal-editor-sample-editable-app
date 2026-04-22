@@ -35,4 +35,12 @@ function getSearchParamsForHashRouting() {
 	return new URLSearchParams(getQueryStringForHashRouting());
 }
 
-export { getArticle, getQueryStringForHashRouting, getSearchParamsForHashRouting };
+function getAEMPath(slug) {
+	const root = process.env.NEXT_PUBLIC_AEM_ROOT || "/content/wknd/language-masters/en";
+	if (!slug || slug.length === 0) {
+		return root;
+	}
+	return `${root}/${Array.isArray(slug) ? slug.join('/') : slug}`;
+}
+
+export { getArticle, getQueryStringForHashRouting, getSearchParamsForHashRouting, getAEMPath };

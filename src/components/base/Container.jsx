@@ -6,15 +6,23 @@ import Title from './Title';
 import Image from './Image';
 import Accordion from './Accordion';
 import Teaser from './Teaser';
+import ImageList from './ImageList';
 
-const Container = ({ resource, type, label = "Container"}) => {
+const Container = ({ resource, type, label = "Container", data}) => {
   const [components, setComponents] = React.useState(null);
+
+  const gridClassNames = data?.gridClassNames || "aem-Grid aem-Grid--12 aem-Grid--default--12";
+  const columnClassNames = data?.columnClassNames || {};
 
   const createChildComponents = (items, itemid) => {
     const components = [];
     for(let key in items) {
       const item = items[key];
-      const type = item["sling:resourceType"]?.split("/").pop();
+      if (item === null || typeof item !== 'object') {
+        continue;
+      }
+      const resourceType = item["sling:resourceType"] || item[":type"];
+      const type = resourceType?.split("/").pop();
       if (type === undefined) {
         continue;
       }
@@ -37,17 +45,44 @@ const Container = ({ resource, type, label = "Container"}) => {
           itemType = "container";
           Component = Accordion;
           break;
+        case "responsivegrid":
         case "container":
           itemType = "container";
           Component = Container;
+          break;
+        case "experiencefragment":
+          itemType = "container";
+          Component = Container;
+          break;
+        case "tabs":
+        case "accordion":
+          itemType = "container";
+          Component = Accordion;
           break;
         case "teaser":
           itemType = "component";
           Component = Teaser;
           break;
-        default: 
+        case "image-list":
           itemType = "component";
-          Component = () => (<div/>);
+          Component = ImageList;
+          break;
+        case "button":
+        case "breadcrumb":
+        case "separator":
+        case "list":
+        case "navigation":
+          itemType = "component";
+          Component = (props) => (
+            <div className="placeholder-component" style={{border: '1px dashed #ccc', padding: '10px', margin: '5px'}}>
+               {type} ({props.resource})
+            </div>
+          );
+          break;
+        default: 
+          console.log("Unmapped component type:", type, resourceType);
+          itemType = "component";
+          Component = (props) => (<div className="unmapped-component">Unmapped: {type} ({props.resource})</div>);
           break;
       }
 
@@ -56,20 +91,31 @@ const Container = ({ resource, type, label = "Container"}) => {
         type: itemType,
         data: item,
       };
-      components.push(<Component key={key} {...props} />)
+
+      const colClass = columnClassNames[key] || "aem-GridColumn aem-GridColumn--default--12";
+      components.push(
+        <div key={key} className={colClass}>
+          <Component {...props} />
+        </div>
+      )
     }
     return components;
   }
 
   React.useEffect(() => {
+    if (data) {
+      const items = data[":items"] || data;
+      setComponents(createChildComponents(items, resource));
+      return;
+    }
     if(!resource) return;
-    fetchData(resource).then((data) => {
-      setComponents(createChildComponents(data, resource));
+    fetchData(resource).then((fetchedData) => {
+      setComponents(createChildComponents(fetchedData, resource));
     });
-  }, [resource]);
+  }, [resource, data]);
   
   return (
-    <div className="container" data-aue-component="container" data-aue-resource={resource} data-aue-type={type} data-aue-label={label}>
+    <div className={gridClassNames} data-aue-component="container" data-aue-resource={resource} data-aue-type={type} data-aue-label={label}>
      {components}
     </div>
   )

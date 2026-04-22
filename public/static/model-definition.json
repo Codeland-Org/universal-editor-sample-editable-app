@@ -55,5 +55,53 @@
         "required": true
       }
     ]
+  },
+  {
+    "id": "image-list",
+    "fields": [
+      {
+        "component": "select",
+        "name": "listFrom",
+        "value": "static",
+        "label": "List From",
+        "valueType": "string",
+        "options": [
+          { "name": "Fixed List", "value": "static" },
+          { "name": "Child Pages", "value": "children" }
+        ]
+      },
+      {
+        "component": "aem-content",
+        "name": "pages",
+        "label": "Pages",
+        "valueType": "string",
+        "multi": true,
+        "condition": { "===": [{"var" : "listFrom"}, "static"] }
+      },
+      {
+        "component": "aem-content",
+        "name": "parentPage",
+        "label": "Parent Page",
+        "valueType": "string",
+        "condition": { "===": [{"var" : "listFrom"}, "children"] }
+      }
+    ]
+  },
+  {
+    "id": "image-list-item",
+    "fields": [
+      {
+        "component": "text",
+        "name": "jcr:title",
+        "label": "Title Override",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "jcr:description",
+        "label": "Description Override",
+        "valueType": "string"
+      }
+    ]
   }
 ]

@@ -42,6 +42,11 @@ export default function RootLayout({ children }) {
           <script type="application/vnd.adobe.aue.component+json" src="/static/component-definition.json" />
           <script type="application/vnd.adobe.aue.filter+json" src="/static/filter-definition.json" />
           <script type="application/vnd.adobe.aue.model+json" src="/static/model-definition.json" />
+          
+          {/* WKND Styles from AEM */}
+          <link rel="stylesheet" href="/aem-proxy/etc.clientlibs/wknd/clientlibs/clientlib-base.css" />
+          <link rel="stylesheet" href="/aem-proxy/etc.clientlibs/wknd/clientlibs/clientlib-grid.css" />
+          <link rel="stylesheet" href="/aem-proxy/etc.clientlibs/wknd/clientlibs/clientlib-site.css" />
           <script dangerouslySetInnerHTML={{
             __html: `
             (function () {

@@ -9,7 +9,7 @@ const AccordionItem = (props) => {
     return(
         <div className={`accordion-item ${isOpen ? 'is-open' : ''}`} data-aue-component="accordion-item" data-aue-resource={resource} data-aue-type="component" data-aue-label="Accordion Item">
             <div className="accordion-item-title" onClick={onToggle}>
-                <h3 data-aue-prop="cq:panelTitle" data-aue-type="text" data-aue-label="Title">{data["cq:panelTitle"]}</h3>
+                <h3 data-aue-prop="cq:panelTitle" data-aue-type="text" data-aue-label="Title">{data["cq:panelTitle"] || data["jcr:title"] || data["title"] || "Item"}</h3>
                 <span className="accordion-item-icon">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M4 6L8 10L12 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -33,8 +33,12 @@ const Accordion = (props) => {
 
     React.useEffect(() => {
         if(!data) return;
-        const itemKeys = Object.keys(data).filter((item) => {
-            return data[item]["sling:resourceType"] === "wknd/components/container";
+        const itemsToProcess = data[":items"] || data;
+        const itemKeys = Object.keys(itemsToProcess).filter((key) => {
+            const item = itemsToProcess[key];
+            if (typeof item !== 'object') return false;
+            const resourceType = item["sling:resourceType"] || item[":type"];
+            return resourceType?.includes("container");
         });
         setItems(itemKeys);
         
@@ -63,7 +67,7 @@ const Accordion = (props) => {
                     key={`${resource}/${item}`} 
                     resource={`${resource}/${item}`} 
                     type={type} 
-                    data={data[item]} 
+                    data={(data[":items"] || data)[item]} 
                     isOpen={openItems.has(index)}
                     onToggle={() => toggleItem(index)}
                 />
