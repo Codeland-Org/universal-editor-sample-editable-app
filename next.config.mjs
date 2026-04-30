@@ -1,6 +1,18 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
+  async rewrites() {
+    return [
+      {
+        source: '/content/wknd/language-masters/en/:path*',
+        destination: '/:path*',
+      },
+      {
+        source: '/content/wknd/language-masters/en',
+        destination: '/',
+      }
+    ]
+  },
   async headers() {
     debugger;
     return [
@@ -8,7 +20,8 @@ const nextConfig = {
         source: "/:path*",
         headers: [
           { key: "Access-Control-Allow-Credentials", value: "true" },
-          { key: "Access-Control-Allow-Origin", value: "https://experience.adobe.com" },
+          // { key: "Access-Control-Allow-Origin", value: "https://experience.adobe.com" },
+          { key: "Access-Control-Allow-Origin", value: "https://localhost:8443" },
           { key: "Access-Control-Allow-Methods", value: "GET, POST, OPTIONS, PUT, PATCH, DELETE" },
           { key: "Access-Control-Allow-Headers", value: "Content-Type, Authorization, X-Requested-With" },
           // CRITICAL: This allows a public site to access your local network

@@ -95,6 +95,17 @@
               }
             }
           }
+        },
+        {
+          "title": "Separator",
+          "id": "separator",
+          "plugins": {
+            "aem": {
+              "page": {
+                "resourceType": "wknd/components/separator"
+              }
+            }
+          }
         }
       ]
     },
