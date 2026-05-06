@@ -2,7 +2,7 @@
 {
     "id": "container",
     "components": [
-        "text", "image", "title", "accordion", "container", "richtext", "image-list", "separator"
+        "text", "image", "title", "accordion", "container", "richtext", "image-list", "separator", "contentfragment"
     ]
     },
   {

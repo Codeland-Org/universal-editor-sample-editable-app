@@ -8,6 +8,7 @@ import Accordion from './Accordion';
 import Teaser from './Teaser';
 import ImageList from './ImageList';
 import Separator from './Separator';
+import ContentFragment from './ContentFragment';
 
 const Container = ({ resource, type, label = "Container", data}) => {
   const [components, setComponents] = React.useState(null);
@@ -71,6 +72,10 @@ const Container = ({ resource, type, label = "Container", data}) => {
         case "separator":
           itemType = "component";
           Component = Separator;
+          break;
+        case "contentfragment":
+          itemType = "component";
+          Component = ContentFragment;
           break;
         case "button":
         case "breadcrumb":

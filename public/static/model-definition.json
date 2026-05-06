@@ -103,5 +103,19 @@
         "valueType": "string"
       }
     ]
+  },
+  {
+    "id": "contentfragment",
+    "fields": [
+      {
+        "component": "aem-content-fragment",
+        "name": "fragmentPath",
+        "label": "Content Fragment Picker",
+        "valueType": "string",
+        "validation": {
+          "rootPath": "/content/dam"
+        }
+      }
+    ]
   }
 ]

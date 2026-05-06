@@ -106,6 +106,18 @@
               }
             }
           }
+        },
+        {
+          "title": "Content Fragment",
+          "id": "contentfragment",
+          "model": "contentfragment",
+          "plugins": {
+            "aem": {
+              "page": {
+                "resourceType": "wknd/components/contentfragment"
+              }
+            }
+          }
         }
       ]
     },
